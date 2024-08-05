@@ -9,6 +9,8 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+        <Button x:Name="PickFolderButton" Content="Open a folder"
+                Click="PickFolderButton_Click" Margin="0,0,0,10"/>
+        <TextBlock x:Name="PickFolderOutputTextBlock" TextWrapping="Wrap" Padding="20,5,0,0"/>
     </StackPanel>
 </Window>

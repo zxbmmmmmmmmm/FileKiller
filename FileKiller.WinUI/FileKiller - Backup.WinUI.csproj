@@ -28,6 +28,20 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="NativeLibs\**\*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <None Include="NativeLibs\**\*.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
   <!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
@@ -35,6 +49,10 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="NativeLibs\ExplorerExtensions.dll" />
+    <None Remove="NativeLibs\ExplorerExtensions.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FileKiller.Core\FileKiller.Core.csproj" />

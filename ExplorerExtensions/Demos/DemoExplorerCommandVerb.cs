@@ -13,7 +13,6 @@ using _EXPCMDFLAGS = Windows.Win32.UI.Shell._EXPCMDFLAGS;
 using IPropertyBag = Windows.Win32.System.Com.StructuredStorage.IPropertyBag;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using ExplorerExtensions.Helpers;
 
 namespace ExplorerExtensions.Demos
 {
@@ -150,7 +149,6 @@ namespace ExplorerExtensions.Demos
                         var path = sb.ToString().Replace("\r\n", "");
                         Windows.Win32.PInvoke.MessageBox(hwnd, path, "114514", Windows.Win32.UI.WindowsAndMessaging.MESSAGEBOX_STYLE.MB_OK);
                         var info = new DirectoryInfo(path);
-                        FileHelper.DeleteFolder(info);
                     }
                     catch { }
                 }
