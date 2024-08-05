@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FileKiller.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "FileKiller.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
