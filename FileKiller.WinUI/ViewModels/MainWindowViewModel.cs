@@ -13,17 +13,46 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-public partial class MainPageViewModel:ObservableObject
+public partial class MainWindowViewModel:ObservableObject
 {
+
+    public static MainWindowViewModel? Instance { get; private set; }
+
+    public MainWindowViewModel()
+    {
+        Instance = this;
+    }
+
     [ObservableProperty]
     private ObservableCollection<ItemViewModel> _items = [];
 
     [RelayCommand]
     public async Task DeleteItemsAsync()
     {
-        foreach (var itemViewModel in Items)
+        var count = Items.Count;
+        var num = 0;
+        while(count > 0)
         {
-            itemViewModel.IsDeleted = await FileHelper.DeleteFolderAsync(new DirectoryInfo(itemViewModel.Path));
+            var result = true;
+            var info = new DirectoryInfo(Items[num].Path);
+            if (Directory.Exists(Items[num].Path))
+            {
+                result = await FileHelper.DeleteFolderAsync(new DirectoryInfo(Items[num].Path));
+            }
+            else
+            {
+                result = await FileHelper.DeleteFileAsync(Items[num].Path);
+            }
+
+            if (result)
+            {
+                Items.RemoveAt(num);
+            }
+            else
+            {
+                num++;
+            }
+            count -= 1;
         }
     }
     [RelayCommand]
@@ -35,8 +64,8 @@ public partial class MainPageViewModel:ObservableObject
             var vm = new ItemViewModel(item.Path, item.IsOfType(StorageItemTypes.Folder)?ItemType.Directory:ItemType.File);
             Items.Add(vm);
         }
-
     }
+
     public async Task DeleteFolderAsync(StorageFolder folder)
     {
         IReadOnlyList<StorageFolder> folders = null;

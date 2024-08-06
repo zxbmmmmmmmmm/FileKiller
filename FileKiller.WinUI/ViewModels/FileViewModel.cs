@@ -10,6 +10,7 @@ public partial class ItemViewModel(string path, ItemType type) : ObservableObjec
 
     [ObservableProperty]
     private bool _isDeleted;
+
     [ObservableProperty]
     private double _progress;
 }

@@ -6,6 +6,7 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
   xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
@@ -49,6 +50,14 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
+        <uap5:Extension
+          Category="windows.appExecutionAlias"        
+          Executable="FileKiller.WinUI.exe"
+          EntryPoint="Windows.FullTrustApplication">
+          <uap5:AppExecutionAlias>
+            <uap5:ExecutionAlias Alias="filekiller.exe" />
+          </uap5:AppExecutionAlias>
+        </uap5:Extension>
         <com:Extension Category="windows.comServer">
           <com:ComServer>
             <com:SurrogateServer SystemSurrogate="PreviewHost" DisplayName="ExplorerExtensions">

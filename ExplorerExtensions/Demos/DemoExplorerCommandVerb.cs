@@ -146,9 +146,11 @@ namespace ExplorerExtensions.Demos
                             Debug.WriteLine(displayName);
                             Marshal.FreeCoTaskMem((nint)pDisplayName.Value);
                         }
-                        var path = sb.ToString().Replace("\r\n", "");
-                        Windows.Win32.PInvoke.MessageBox(hwnd, path, "114514", Windows.Win32.UI.WindowsAndMessaging.MESSAGEBOX_STYLE.MB_OK);
-                        var info = new DirectoryInfo(path);
+                        var path = sb.ToString().Replace("\r\n", "|");
+                        var process = new System.Diagnostics.Process();
+                        process.StartInfo.FileName = "filekiller.exe"; 
+                        process.StartInfo.Arguments = path;
+                        process.Start();
                     }
                     catch { }
                 }
