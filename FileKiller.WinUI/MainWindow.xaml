@@ -4,13 +4,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FileKiller.WinUI"
+    xmlns:pages="using:FileKiller.WinUI.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+    <Grid>
+        <Frame>
+            <pages:MainPage/>
+        </Frame>
+        <StackPanel Visibility="Collapsed" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="PickFolderButton" Content="Delete folder"
+                    Click="PickFolderButton_Click" Margin="0,0,0,10"/>
+            <TextBlock x:Name="PickFolderOutputTextBlock" TextWrapping="Wrap" Padding="20,5,0,0"/>
+        </StackPanel>
+    </Grid>
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="PickFolderButton" Content="Delete folder"
-                Click="PickFolderButton_Click" Margin="0,0,0,10"/>
-        <TextBlock x:Name="PickFolderOutputTextBlock" TextWrapping="Wrap" Padding="20,5,0,0"/>
-    </StackPanel>
 </Window>

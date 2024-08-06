@@ -52,10 +52,10 @@
         <com:Extension Category="windows.comServer">
           <com:ComServer>
             <com:SurrogateServer SystemSurrogate="PreviewHost" DisplayName="ExplorerExtensions">
-              <com:Class Id="D0CCA119-3218-4EC9-B090-19C95031E349" Path="FileKiller.WinUI\ExplorerExtensions.dll" ThreadingModel="Both"/>
+              <com:Class Id="D0CCA119-3218-4EC9-B090-19C95031E349" Path="NativeLibs\ExplorerExtensions.dll" ThreadingModel="Both"/>
             </com:SurrogateServer>
             <com:SurrogateServer AppId="C41D6460-8AC9-40B7-A62E-584237875943" DisplayName="ExplorerExtensions">
-              <com:Class Id="C41D6460-8AC9-40B7-A62E-584237875943" Path="FileKiller.WinUI\ExplorerExtensions.dll" ThreadingModel="Both"/>
+              <com:Class Id="C41D6460-8AC9-40B7-A62E-584237875943" Path="NativeLibs\ExplorerExtensions.dll" ThreadingModel="Both"/>
             </com:SurrogateServer>
           </com:ComServer>
         </com:Extension>

@@ -51,7 +51,7 @@ namespace FileKiller.WinUI
             {
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
                 PickFolderOutputTextBlock.Text = "Picked folder: " + folder.Name;
-                FileHelper.DeleteFolder(new DirectoryInfo(folder.Path));
+                FileHelper.DeleteFolderAsync(new DirectoryInfo(folder.Path));
                 Debug.WriteLine("DONE");
 
 

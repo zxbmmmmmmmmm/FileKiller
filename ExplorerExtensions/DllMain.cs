@@ -19,7 +19,8 @@ namespace ExplorerExtensions
             {
                 [typeof(Demos.DemoPreviewHandler).GUID] = () => new Demos.DemoPreviewHandler(),
                 [typeof(Demos.DemoExplorerCommandVerb).GUID] = () =>
-                    new Demos.DemoExplorerCommandVerb("强制删除文件22",null),
+                    new Demos.DemoExplorerCommandVerb("FileKiller",[new Demos.DemoExplorerCommandVerb("删除",null),
+                        new Demos.DemoExplorerCommandVerb("解锁", null)]),
             };
         }
 
