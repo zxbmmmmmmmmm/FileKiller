@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace FileKiller.Core.Helpers;
 
-public class FileHelper
+public static class FileHelper
 {
     [DllImport("NativeLibs/EzUnlock.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     public static extern bool EzUnlockFileW(string path);
@@ -12,6 +13,7 @@ public class FileHelper
     [DllImport("NativeLibs/EzUnlock.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     public static extern bool EzDeleteFileW(string path);
 
+    public static event EventHandler<ProgressingItemChangedEventArgs>? ItemChanged;
     public static string? Message { get; set; }
     public static async Task<bool> DeleteFolderAsync(DirectoryInfo folder)
     {
@@ -30,7 +32,6 @@ public class FileHelper
         {
             folder.Delete();
             return result;
-
         }
         catch { return false; }
     }
@@ -56,6 +57,7 @@ public class FileHelper
     {
         return await Task.Run<bool>(() =>
         {
+            //FileHelper.ItemChanged.Invoke();
             var result = EzUnlockFileW(path);
             Debug.WriteLine(path + ":" + result);
             return result;
@@ -70,4 +72,8 @@ public class FileHelper
             return result;
         });
     }
+}
+public class ProgressingItemChangedEventArgs(string item) : EventArgs
+{
+    public string ItemName { get; } = item;
 }

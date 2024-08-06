@@ -135,7 +135,6 @@ public partial class MainWindowViewModel:ObservableObject
             {
                 var result = FileHelper.EzDeleteFileW(item.Path);
                 Debug.WriteLine(item.Path + ":" + result);
-
             }
         }
 

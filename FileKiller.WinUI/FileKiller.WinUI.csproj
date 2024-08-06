@@ -14,6 +14,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\App\Delete64.ico" />
+    <None Remove="Assets\App\Unlock64.ico" />
     <None Remove="Assets\Logo.png" />
     <None Remove="Assets\Logo64.ico" />
   </ItemGroup>
@@ -52,6 +54,11 @@
     <AdditionalFiles Update="NativeMethods.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </AdditionalFiles>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Assets\App\Logo64.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Update="NativeLibs\ExplorerExtensions.dll">

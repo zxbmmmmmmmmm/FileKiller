@@ -19,8 +19,8 @@ namespace ExplorerExtensions
             {
                 [typeof(Demos.DemoPreviewHandler).GUID] = () => new Demos.DemoPreviewHandler(),
                 [typeof(Demos.DemoExplorerCommandVerb).GUID] = () =>
-                    new Demos.DemoExplorerCommandVerb("FileKiller",[new Demos.DemoExplorerCommandVerb("删除",null),
-                        new Demos.DemoExplorerCommandVerb("解锁", null)]),
+                    new Demos.DemoExplorerCommandVerb("FileKiller", Path.Combine("App", "Logo64.ico"), [new Demos.DemoExplorerCommandVerb("删除",Path.Combine("App","Delete64.ico"),null),
+                        new Demos.DemoExplorerCommandVerb("解锁",Path.Combine("App","Unlock64.ico"), null)]),
             };
         }
 
@@ -54,6 +54,18 @@ namespace ExplorerExtensions
         public static void DllRelease()
         {
             Interlocked.Decrement(ref g_cRefModule);
+        }
+
+        public static unsafe string GetModuleFileName(Windows.Win32.Foundation.HMODULE hModule)
+        {
+            char* buffer = stackalloc char[65536];
+            var size = Windows.Win32.PInvoke.GetModuleFileName(hModule, buffer, 65535);
+            if (size > 0)
+            {
+                return new string(buffer, 0, (int)size);
+            }
+
+            return string.Empty;
         }
 
         [UnmanagedCallersOnly(EntryPoint = "DllGetClassObject")]

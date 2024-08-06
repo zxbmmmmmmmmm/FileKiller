@@ -24,11 +24,12 @@ namespace ExplorerExtensions.Demos
     {
         private readonly string contextMenuName;
         private readonly IExplorerCommand[]? childCommands;
+        private readonly string icon;
+        internal DemoExplorerCommandVerb() : this("Demo Context Menu","Logo64.ico", null) { }
 
-        internal DemoExplorerCommandVerb() : this("Demo Context Menu", null) { }
-
-        internal DemoExplorerCommandVerb(string contextMenuName, IExplorerCommand[]? childCommands)
+        internal DemoExplorerCommandVerb(string contextMenuName,string icon, IExplorerCommand[]? childCommands)
         {
+            this.icon = icon;
             this.contextMenuName = contextMenuName;
             this.childCommands = childCommands;
         }
@@ -69,35 +70,23 @@ namespace ExplorerExtensions.Demos
 
         public unsafe int GetIcon(Windows.Win32.UI.Shell.IShellItemArray* psiItemArray, PWSTR* ppszIcon)
         {
-            var moduleName = $"{typeof(DllMain).Assembly.GetName().Name}.dll";
-            var path = "";
-            fixed (char* lpModuleNameLocal = moduleName)
+            var moduleFileName = DllMain.GetModuleFileName(DllMain.HINSTANCE);
+
+            if (string.IsNullOrEmpty(moduleFileName))
             {
-                var hmodule = Windows.Win32.PInvoke.GetModuleHandle(lpModuleNameLocal);
-                path = GetModuleFileName(hmodule).Replace($"NativeLibs\\ExplorerExtensions.dll","Assets\\Logo64.ico");
+                *ppszIcon = new PWSTR((char*)0);
+                return DllMain.E_NOTIMPL;
             }
 
-            //Windows.Win32.PInvoke.MessageBox((HWND)0, path, "DemoExplorerCommandVerb", Windows.Win32.UI.WindowsAndMessaging.MESSAGEBOX_STYLE.MB_OK);
-
-            fixed (char* pStr = path)
+            var fileInfo = new FileInfo(moduleFileName);
+            var icoFile = System.IO.Path.Combine(fileInfo.Directory!.Parent!.FullName, "Assets", icon);
+            fixed (char* pStr = icoFile)
             {
-                return PInvoke.SHStrDup(pStr, ppszIcon);
+                return Windows.Win32.PInvoke.SHStrDup(pStr, ppszIcon).Value;
             }
-
-
-
         }
-        unsafe static string GetModuleFileName(Windows.Win32.Foundation.HMODULE hModule)
-        {
-            char* buffer = stackalloc char[65536];
-            var size = Windows.Win32.PInvoke.GetModuleFileName(hModule, buffer, 65535);
-            if (size > 0)
-            {
-                return new string(buffer, 0, (int)size);
-            }
 
-            return string.Empty;
-        }
+
 
         public unsafe int GetState(Windows.Win32.UI.Shell.IShellItemArray* psiItemArray, [MarshalAs(UnmanagedType.Bool)] bool fOkToBeSlow, uint* pCmdState)
         {
