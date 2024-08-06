@@ -18,6 +18,7 @@ public partial class MainWindowViewModel:ObservableObject
 
     public static MainWindowViewModel? Instance { get; private set; }
 
+    public string? Command { get; set; }
     public MainWindowViewModel()
     {
         Instance = this;
@@ -55,6 +56,38 @@ public partial class MainWindowViewModel:ObservableObject
             count -= 1;
         }
     }
+
+    [RelayCommand]
+    public async Task UnlockItemsAsync()
+    {
+        var count = Items.Count;
+        var num = 0;
+        while (count > 0)
+        {
+            var result = true;
+            var info = new DirectoryInfo(Items[num].Path);
+            if (Directory.Exists(Items[num].Path))
+            {
+                result = await FileHelper.UnlockFolderAsync(new DirectoryInfo(Items[num].Path));
+            }
+            else
+            {
+                result = await FileHelper.UnlockFileAsync(Items[num].Path);
+            }
+
+            if (result)
+            {
+                Items.RemoveAt(num);
+            }
+            else
+            {
+                num++;
+            }
+            count -= 1;
+        }
+    }
+
+
     [RelayCommand]
     public void AddItems(IEnumerable<IStorageItem> items)
     {

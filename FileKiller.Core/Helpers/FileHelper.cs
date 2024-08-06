@@ -32,6 +32,33 @@ public class FileHelper
         }
         catch { return false; }
     }
+
+
+    public static async Task<bool> UnlockFolderAsync(DirectoryInfo folder)
+    {
+        var result = true;
+        foreach (var item in folder.GetDirectories())
+        {
+            if (!await UnlockFolderAsync(item)) result = false;
+        }
+
+        foreach (var item in folder.GetFiles("*.*", SearchOption.AllDirectories))
+        {
+            if (!await UnlockFileAsync(item.FullName)) result = false;
+        }
+
+        return result;
+    }
+
+    public static async Task<bool> UnlockFileAsync(string path)
+    {
+        return await Task.Run<bool>(() =>
+        {
+            var result = EzUnlockFileW(path);
+            Debug.WriteLine(path + ":" + result);
+            return result;
+        });
+    }
     public static async Task<bool> DeleteFileAsync(string path)
     {
         return await Task.Run<bool>(() =>

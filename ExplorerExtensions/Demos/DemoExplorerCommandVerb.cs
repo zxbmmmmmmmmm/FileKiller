@@ -146,10 +146,21 @@ namespace ExplorerExtensions.Demos
                             Debug.WriteLine(displayName);
                             Marshal.FreeCoTaskMem((nint)pDisplayName.Value);
                         }
-                        var path = sb.ToString().Replace("\r\n", "|");
+                        var pathBuilder = new StringBuilder();
+                        foreach(var path in sb.ToString().Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            pathBuilder.Append($"\"{path}\" ");
+                        }
                         var process = new System.Diagnostics.Process();
                         process.StartInfo.FileName = "filekiller.exe"; 
-                        process.StartInfo.Arguments = path;
+                        if(contextMenuName is "删除")
+                        {
+                            process.StartInfo.Arguments = "delete " + pathBuilder;
+                        }
+                        else
+                        {
+                            process.StartInfo.Arguments = "unlock " + pathBuilder;
+                        }
                         process.Start();
                     }
                     catch { }

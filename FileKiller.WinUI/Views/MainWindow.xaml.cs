@@ -46,11 +46,18 @@ namespace FileKiller.WinUI.Views
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.Items.Count > 0)
+            if (ViewModel.Command is not null)
             {
                 InfoGrid.Visibility = Visibility.Collapsed;
                 await Task.Delay(300);
-                await ViewModel.DeleteItemsCommand.ExecuteAsync(null);
+                if(ViewModel.Command is "delete")
+                {
+                    await ViewModel.DeleteItemsCommand.ExecuteAsync(null);
+                }
+                else
+                {
+                    await ViewModel.UnlockItemsCommand.ExecuteAsync(null);
+                }
                 await Task.Delay(300);
                 this.Close();
             }

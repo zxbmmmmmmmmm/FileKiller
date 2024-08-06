@@ -1,54 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Window
     x:Class="FileKiller.WinUI.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:FileKiller.WinUI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:vm="using:FileKiller.WinUI.ViewModels"
-   
+    xmlns:local="using:FileKiller.WinUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:FileKiller.WinUI.ViewModels"
     mc:Ignorable="d">
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <Grid x:Name="MainGrid" AllowDrop="True" >
+    <Grid x:Name="MainGrid" AllowDrop="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid x:Name="TitleGrid" >
-            <TextBlock VerticalAlignment="Center" Margin="12" >
-                <Run Text="{x:Bind ViewModel.Items.Count,Mode=OneWay}"/>
-                <Run Text="个内容"/>
+        <Grid x:Name="TitleGrid">
+            <TextBlock Margin="12" VerticalAlignment="Center">
+                <Run Text="{x:Bind ViewModel.Items.Count, Mode=OneWay}" />
+                <Run Text="个内容" />
             </TextBlock>
         </Grid>
-        <Grid Grid.Row="1" x:Name="InfoGrid" Height="150" Background="{ThemeResource CardBackgroundFillColorDefault}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
-                <TextBlock Text="拖动文件/文件夹到此窗口" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Button Content="删除" Style="{ThemeResource AccentButtonStyle}" HorizontalAlignment="Center" Command="{x:Bind ViewModel.DeleteItemsCommand}"/>
+        <Grid
+            x:Name="InfoGrid"
+            Grid.Row="1"
+            Height="150"
+            Background="{ThemeResource CardBackgroundFillColorDefault}">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="12">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="拖动文件/文件夹到此窗口" />
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="12">
+                    <Button
+                        Command="{x:Bind ViewModel.DeleteItemsCommand}"
+                        Content="删除"
+                        Style="{ThemeResource AccentButtonStyle}" />
+                    <Button Command="{x:Bind ViewModel.UnlockItemsCommand}" Content="解锁" />
+                </StackPanel>
             </StackPanel>
         </Grid>
-        <ItemsView Grid.Row="2" ItemsSource="{x:Bind ViewModel.Items,Mode=OneWay}" Margin="12">
+        <ItemsView
+            Grid.Row="2"
+            Margin="12"
+            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
             <ItemsView.ItemTemplate>
 
                 <DataTemplate x:DataType="vm:ItemViewModel">
                     <ItemContainer>
                         <Grid x:DefaultBindMode="OneWay">
-                            <StackPanel Margin="12" Orientation="Horizontal" Spacing="12">
-                                <FontIcon Glyph="&#xE8A5;"/>
-                                <TextBlock Text="{x:Bind Name}"/>
-                                <TextBlock Text="{x:Bind Path}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            <StackPanel
+                                Margin="12"
+                                Orientation="Horizontal"
+                                Spacing="12">
+                                <FontIcon Glyph="&#xE8A5;" />
+                                <TextBlock Text="{x:Bind Name}" />
+                                <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind Path}" />
                             </StackPanel>
                         </Grid>
                     </ItemContainer>
                 </DataTemplate>
             </ItemsView.ItemTemplate>
         </ItemsView>
-        <Grid Grid.Row="3" Name="ProgressGrid">
-            <ProgressBar Visibility="{x:Bind ViewModel.DeleteItemsCommand.IsRunning,Mode=OneWay}" x:Name="MyProgressBar" IsIndeterminate="True"/>
+        <Grid Name="ProgressGrid" Grid.Row="3">
+            <ProgressBar
+                x:Name="MyProgressBar"
+                IsIndeterminate="True"
+                Visibility="{x:Bind ViewModel.DeleteItemsCommand.IsRunning, Mode=OneWay}" />
         </Grid>
     </Grid>
 

@@ -37,6 +37,7 @@ namespace FileKiller.WinUI
             this.InitializeComponent();
         }
 
+        
         /// <summary>
         /// Invoked when the application is launched.
         /// </summary>
@@ -45,9 +46,10 @@ namespace FileKiller.WinUI
         {
             var window= new MainWindow();
             var arguments = Environment.GetCommandLineArgs();
-            if (arguments.Length > 1)
-            {            
-                foreach (var path in arguments[1].Split("|",StringSplitOptions.RemoveEmptyEntries))
+            if (arguments.Length > 2)
+            {
+                window.ViewModel.Command = arguments[1];
+                foreach (var path in arguments[2..])
                 {
                     window.ViewModel.Items.Add(new ItemViewModel(path,ItemType.Directory));
                 }
