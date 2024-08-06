@@ -1,10 +1,11 @@
 ﻿using System.IO;
-using FileKiller.Core.Helpers;
+using FileKiller.Core.Services;
 
 namespace FileKiller.WinUI.ViewModels;
 using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FileKiller.WinUI.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,71 +23,112 @@ public partial class MainWindowViewModel:ObservableObject
 
     [ObservableProperty]
     public string? _message;
+
+    private readonly FileOperationService _fileService = new();
     public MainWindowViewModel()
     {
         Instance = this;
+        _fileService.CurrentItemChanged += CurrentItemChanged;
+    }
+
+    private async void CurrentItemChanged(object? sender, ProgressingItemChangedEventArgs e)
+    {
+        MainWindow.Current.DispatcherQueue.TryEnqueue(() => {
+            Message = "正在处理 " + e.ItemName;
+        });
     }
 
     [ObservableProperty]
     private ObservableCollection<ItemViewModel> _items = [];
 
+    [ObservableProperty]
+    private ObservableCollection<ItemViewModel> _selectedItems = [];
+
+    [RelayCommand]
+    public void RemoveSelectedItems()
+    {
+        while(SelectedItems.Count > 0)
+        {
+            Items.Remove(SelectedItems[0]);
+        }
+
+    }
+
     [RelayCommand]
     public async Task DeleteItemsAsync()
     {
-        var count = Items.Count;
-        var num = 0;
-        while(count > 0)
+        try
         {
-            var result = true;
-            var info = new DirectoryInfo(Items[num].Path);
-            if (Directory.Exists(Items[num].Path))
+            var count = Items.Count;
+            var num = 0;
+            while (count > 0)
             {
-                result = await FileHelper.DeleteFolderAsync(new DirectoryInfo(Items[num].Path));
-            }
-            else
-            {
-                result = await FileHelper.DeleteFileAsync(Items[num].Path);
-            }
+                var result = true;
+                var info = new DirectoryInfo(Items[num].Path);
+                if (Directory.Exists(Items[num].Path))
+                {
+                    result = await _fileService.DeleteFolderAsync(new DirectoryInfo(Items[num].Path));
+                }
+                else
+                {
+                    result = await _fileService.DeleteFileAsync(Items[num].Path);
+                }
 
-            if (result)
-            {
-                Items.RemoveAt(num);
+                if (result)
+                {
+                    Items.RemoveAt(num);
+                }
+                else
+                {
+                    num++;
+                }
+                count -= 1;
             }
-            else
-            {
-                num++;
-            }
-            count -= 1;
+            Message = "完成";
+
         }
+        catch (Exception e)
+        {
+            Message = "发生错误:" + e.Message;
+        }
+
     }
 
     [RelayCommand]
     public async Task UnlockItemsAsync()
     {
-        var count = Items.Count;
-        var num = 0;
-        while (count > 0)
+        try
         {
-            var result = true;
-            var info = new DirectoryInfo(Items[num].Path);
-            if (Directory.Exists(Items[num].Path))
+            var count = Items.Count;
+            var num = 0;
+            while (count > 0)
             {
-                result = await FileHelper.UnlockFolderAsync(new DirectoryInfo(Items[num].Path));
-            }
-            else
-            {
-                result = await FileHelper.UnlockFileAsync(Items[num].Path);
-            }
+                var result = true;
+                var info = new DirectoryInfo(Items[num].Path);
+                if (Directory.Exists(Items[num].Path))
+                {
+                    result = await _fileService.UnlockFolderAsync(new DirectoryInfo(Items[num].Path));
+                }
+                else
+                {
+                    result = await _fileService.UnlockFileAsync(Items[num].Path);
+                }
 
-            if (result)
-            {
-                Items.RemoveAt(num);
+                if (result)
+                {
+                    Items.RemoveAt(num);
+                }
+                else
+                {
+                    num++;
+                }
+                count -= 1;
             }
-            else
-            {
-                num++;
-            }
-            count -= 1;
+            Message = "完成";
+        }
+        catch (Exception e)
+        {
+            Message = "发生错误:" + e.Message;
         }
     }
 
@@ -133,7 +175,7 @@ public partial class MainWindowViewModel:ObservableObject
         {
             foreach (var item in files)
             {
-                var result = FileHelper.EzDeleteFileW(item.Path);
+                var result = FileOperationService.EzDeleteFileW(item.Path);
                 Debug.WriteLine(item.Path + ":" + result);
             }
         }

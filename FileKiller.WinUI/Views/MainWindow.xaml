@@ -19,19 +19,25 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid x:Name="TitleGrid">
-            <StackPanel Orientation="Horizontal" Margin="12,0" Spacing="8">
-                <Image Source="/Assets/Logo.png" Height="20" Width="20"/>
+            <StackPanel
+                Margin="12,0"
+                Orientation="Horizontal"
+                Spacing="8">
+                <Image
+                    Width="20"
+                    Height="20"
+                    Source="/Assets/Logo.png" />
                 <TextBlock VerticalAlignment="Center">
-                    <Run Text="FileKiller  "/>
-                    <Run Text="{x:Bind ViewModel.Items.Count, Mode=OneWay}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/><Run Text="个内容" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    <Run Text="FileKiller " />
+                    <Run Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind ViewModel.Items.Count, Mode=OneWay}" /><Run Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="个内容" />
                 </TextBlock>
             </StackPanel>
 
         </Grid>
         <Grid
             x:Name="InfoGrid"
-            Grid.Row="1"      
-            Height="150" 
+            Grid.Row="1"
+            Height="150"
             Background="{ThemeResource CardBackgroundFillColorDefault}">
             <StackPanel
                 HorizontalAlignment="Center"
@@ -45,51 +51,68 @@
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"
                     Spacing="12">
-                    <Button
-                        Command="{x:Bind ViewModel.DeleteItemsCommand}"
-                        Style="{ThemeResource AccentButtonStyle}" >
+                    <Button Command="{x:Bind ViewModel.DeleteItemsCommand}" Style="{ThemeResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
-                            <TextBlock Text="删除" VerticalAlignment="Center"/>
+                            <FontIcon FontSize="16" Glyph="&#xE74D;" />
+                            <TextBlock VerticalAlignment="Center" Text="删除" />
                         </StackPanel>
                     </Button>
-                    <Button
-                        Command="{x:Bind ViewModel.UnlockItemsCommand}">
+                    <Button Command="{x:Bind ViewModel.UnlockItemsCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon Glyph="&#xE785;" FontSize="16"/>
-                            <TextBlock Text="解锁" VerticalAlignment="Center"/>
+                            <FontIcon FontSize="16" Glyph="&#xE785;" />
+                            <TextBlock VerticalAlignment="Center" Text="解锁" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    Text="{x:Bind ViewModel.Message, Mode=OneWay}"
+                    Visibility="{x:Bind NullToVisibility(ViewModel.Message), Mode=OneWay}" />
             </StackPanel>
         </Grid>
-        <ItemsView
+        <ListView
+            x:Name="ItemsListView"
             Grid.Row="2"
-            Margin="12"
-            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
-            <ItemsView.ItemTemplate>
+            Padding="12"
+            IsMultiSelectCheckBoxEnabled="False"
+            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+            SelectionMode="Multiple">
+            <ListView.ItemTemplate>
 
                 <DataTemplate x:DataType="vm:ItemViewModel">
-                    <ItemContainer>
-                        <Grid x:DefaultBindMode="OneWay">
-                            <StackPanel
-                                Margin="12"
-                                Orientation="Horizontal"
-                                Spacing="12">
-                                <FontIcon Glyph="&#xE8A5;" />
-                                <TextBlock Text="{x:Bind Name}" />
-                                <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind Path}" />
-                            </StackPanel>
-                        </Grid>
-                    </ItemContainer>
+                    <Grid x:DefaultBindMode="OneWay">
+                        <StackPanel
+                            Margin="12"
+                            Orientation="Horizontal"
+                            Spacing="12">
+                            <FontIcon Glyph="&#xE8A5;" />
+                            <TextBlock Text="{x:Bind Name}" />
+                            <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind Path}" />
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
-            </ItemsView.ItemTemplate>
-        </ItemsView>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button
+            Grid.Row="2"
+            Margin="12"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Visibility="{x:Bind IntToVisibility(ViewModel.SelectedItems.Count),Mode=OneWay}"
+            Command="{x:Bind ViewModel.RemoveSelectedItemsCommand}"
+            Style="{ThemeResource AccentButtonStyle}">
+            <TextBlock>
+                <Run Text="移除所选项" />
+                <Run Text="(" /><Run Text="{x:Bind ViewModel.SelectedItems.Count,Mode=OneWay}" /><Run Text=")" />
+            </TextBlock>
+        </Button>
         <Grid Name="ProgressGrid" Grid.Row="3">
             <ProgressBar
                 x:Name="MyProgressBar"
                 IsIndeterminate="True"
-                Visibility="{x:Bind VisibilityOr(ViewModel.DeleteItemsCommand.IsRunning,ViewModel.UnlockItemsCommand.IsRunning), Mode=OneWay}" />
+                Visibility="{x:Bind VisibilityOr(ViewModel.DeleteItemsCommand.IsRunning, ViewModel.UnlockItemsCommand.IsRunning), Mode=OneWay}" />
         </Grid>
     </Grid>
 

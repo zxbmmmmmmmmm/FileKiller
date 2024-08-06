@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FileKiller.Core.Helpers;
+namespace FileKiller.Core.Services;
 
-public static class FileHelper
+public class FileOperationService
 {
     [DllImport("NativeLibs/EzUnlock.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     public static extern bool EzUnlockFileW(string path);
@@ -13,9 +13,9 @@ public static class FileHelper
     [DllImport("NativeLibs/EzUnlock.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     public static extern bool EzDeleteFileW(string path);
 
-    public static event EventHandler<ProgressingItemChangedEventArgs>? ItemChanged;
-    public static string? Message { get; set; }
-    public static async Task<bool> DeleteFolderAsync(DirectoryInfo folder)
+    public event EventHandler<ProgressingItemChangedEventArgs>? CurrentItemChanged;
+    public string? Message { get; set; }
+    public async Task<bool> DeleteFolderAsync(DirectoryInfo folder)
     {
         var result = true;
         foreach (var item in folder.GetDirectories())
@@ -37,7 +37,7 @@ public static class FileHelper
     }
 
 
-    public static async Task<bool> UnlockFolderAsync(DirectoryInfo folder)
+    public async Task<bool> UnlockFolderAsync(DirectoryInfo folder)
     {
         var result = true;
         foreach (var item in folder.GetDirectories())
@@ -53,7 +53,7 @@ public static class FileHelper
         return result;
     }
 
-    public static async Task<bool> UnlockFileAsync(string path)
+    public async Task<bool> UnlockFileAsync(string path)
     {
         return await Task.Run<bool>(() =>
         {
@@ -63,10 +63,11 @@ public static class FileHelper
             return result;
         });
     }
-    public static async Task<bool> DeleteFileAsync(string path)
+    public async Task<bool> DeleteFileAsync(string path)
     {
         return await Task.Run<bool>(() =>
         {
+            CurrentItemChanged?.Invoke(this, new ProgressingItemChangedEventArgs(path));
             var result = EzDeleteFileW(path);
             Debug.WriteLine(path + ":" + result);
             return result;

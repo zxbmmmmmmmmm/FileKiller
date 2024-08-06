@@ -16,7 +16,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage;
-using FileKiller.Core.Helpers;
+using FileKiller.Core.Services;
 using Windows.ApplicationModel.DataTransfer;
 using FileKiller.WinUI.ViewModels;
 using FileKiller.WinUI.Helpers;
@@ -33,9 +33,10 @@ namespace FileKiller.WinUI.Views
     public sealed partial class MainWindow : Window
     {
         public MainWindowViewModel ViewModel { get; } = new();
-
+        public static MainWindow Current { get; private set; }
         public MainWindow()
         {
+            Current = this;
             this.InitializeComponent();
             MainGrid.Drop += OnDrop;
             MainGrid.DragOver += OnDragOver;
@@ -43,13 +44,21 @@ namespace FileKiller.WinUI.Views
             this.SetWindowSize(800, 400);
             this.SetIsAlwaysOnTop(true);
             this.ExtendsContentIntoTitleBar = true;
+            ItemsListView.SelectionChanged += OnSelectionChanged;
         }
 
         private Visibility VisibilityOr(bool a, bool b)
         {
             return a || b?Visibility.Visible:Visibility.Collapsed;
         }
-
+        private Visibility NullToVisibility(object? obj)
+        {
+            return obj is null ? Visibility.Collapsed : Visibility.Visible;
+        }
+        private Visibility IntToVisibility(int num)
+        {
+            return num is 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (ViewModel.Command is not null)
@@ -81,6 +90,18 @@ namespace FileKiller.WinUI.Views
         private void OnDragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+        }
+
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach(var item in e.AddedItems)
+            {
+                ViewModel.SelectedItems.Add((item as ItemViewModel)!);
+            }
+            foreach (var item in e.RemovedItems)
+            {
+                ViewModel.SelectedItems.Remove((item as ItemViewModel)!);
+            }
         }
         //private async void PickFolderButton_Click(object sender, RoutedEventArgs e)
         //{
