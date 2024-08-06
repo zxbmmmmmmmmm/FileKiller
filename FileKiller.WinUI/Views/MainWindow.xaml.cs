@@ -41,7 +41,13 @@ namespace FileKiller.WinUI.Views
             MainGrid.DragOver += OnDragOver;
             MainGrid.Loaded += OnLoaded;
             this.SetWindowSize(800, 400);
+            this.SetIsAlwaysOnTop(true);
             this.ExtendsContentIntoTitleBar = true;
+        }
+
+        private Visibility VisibilityOr(bool a, bool b)
+        {
+            return a || b?Visibility.Visible:Visibility.Collapsed;
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -61,11 +67,6 @@ namespace FileKiller.WinUI.Views
                 await Task.Delay(300);
                 this.Close();
             }
-        }
-
-        private async void OnActivated(object sender, WindowActivatedEventArgs args)
-        {
-
         }
 
         private async void OnDrop(object sender, DragEventArgs e)

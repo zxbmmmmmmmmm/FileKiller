@@ -13,6 +13,8 @@ using _EXPCMDFLAGS = Windows.Win32.UI.Shell._EXPCMDFLAGS;
 using IPropertyBag = Windows.Win32.System.Com.StructuredStorage.IPropertyBag;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using Windows.Win32;
+using System.Reflection;
 
 namespace ExplorerExtensions.Demos
 {
@@ -67,8 +69,34 @@ namespace ExplorerExtensions.Demos
 
         public unsafe int GetIcon(Windows.Win32.UI.Shell.IShellItemArray* psiItemArray, PWSTR* ppszIcon)
         {
-            *ppszIcon = new PWSTR((char*)0);
-            return DllMain.E_NOTIMPL;
+            var moduleName = $"{typeof(DllMain).Assembly.GetName().Name}.dll";
+            var path = "";
+            fixed (char* lpModuleNameLocal = moduleName)
+            {
+                var hmodule = Windows.Win32.PInvoke.GetModuleHandle(lpModuleNameLocal);
+                path = GetModuleFileName(hmodule).Replace($"NativeLibs\\ExplorerExtensions.dll","Assets\\Logo64.ico");
+            }
+
+            //Windows.Win32.PInvoke.MessageBox((HWND)0, path, "DemoExplorerCommandVerb", Windows.Win32.UI.WindowsAndMessaging.MESSAGEBOX_STYLE.MB_OK);
+
+            fixed (char* pStr = path)
+            {
+                return PInvoke.SHStrDup(pStr, ppszIcon);
+            }
+
+
+
+        }
+        unsafe static string GetModuleFileName(Windows.Win32.Foundation.HMODULE hModule)
+        {
+            char* buffer = stackalloc char[65536];
+            var size = Windows.Win32.PInvoke.GetModuleFileName(hModule, buffer, 65535);
+            if (size > 0)
+            {
+                return new string(buffer, 0, (int)size);
+            }
+
+            return string.Empty;
         }
 
         public unsafe int GetState(Windows.Win32.UI.Shell.IShellItemArray* psiItemArray, [MarshalAs(UnmanagedType.Bool)] bool fOkToBeSlow, uint* pCmdState)

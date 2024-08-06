@@ -11,6 +11,8 @@ public class FileHelper
 
     [DllImport("NativeLibs/EzUnlock.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     public static extern bool EzDeleteFileW(string path);
+
+    public static string? Message { get; set; }
     public static async Task<bool> DeleteFolderAsync(DirectoryInfo folder)
     {
         var result = true;

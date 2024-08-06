@@ -19,6 +19,9 @@ public partial class MainWindowViewModel:ObservableObject
     public static MainWindowViewModel? Instance { get; private set; }
 
     public string? Command { get; set; }
+
+    [ObservableProperty]
+    public string? _message;
     public MainWindowViewModel()
     {
         Instance = this;

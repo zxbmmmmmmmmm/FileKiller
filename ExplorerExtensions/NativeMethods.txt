@@ -28,6 +28,7 @@ GetStockObject
 DrawText
 SelectObject
 InvalidateRect
+GetModuleFileName
 
 CoMarshalInterThreadInterfaceInStream
 CoGetInterfaceAndReleaseStream

@@ -19,15 +19,19 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid x:Name="TitleGrid">
-            <TextBlock Margin="12" VerticalAlignment="Center">
-                <Run Text="{x:Bind ViewModel.Items.Count, Mode=OneWay}" />
-                <Run Text="个内容" />
-            </TextBlock>
+            <StackPanel Orientation="Horizontal" Margin="12,0" Spacing="8">
+                <Image Source="/Assets/Logo.png" Height="20" Width="20"/>
+                <TextBlock VerticalAlignment="Center">
+                    <Run Text="FileKiller  "/>
+                    <Run Text="{x:Bind ViewModel.Items.Count, Mode=OneWay}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/><Run Text="个内容" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                </TextBlock>
+            </StackPanel>
+
         </Grid>
         <Grid
             x:Name="InfoGrid"
-            Grid.Row="1"
-            Height="150"
+            Grid.Row="1"      
+            Height="150" 
             Background="{ThemeResource CardBackgroundFillColorDefault}">
             <StackPanel
                 HorizontalAlignment="Center"
@@ -43,9 +47,19 @@
                     Spacing="12">
                     <Button
                         Command="{x:Bind ViewModel.DeleteItemsCommand}"
-                        Content="删除"
-                        Style="{ThemeResource AccentButtonStyle}" />
-                    <Button Command="{x:Bind ViewModel.UnlockItemsCommand}" Content="解锁" />
+                        Style="{ThemeResource AccentButtonStyle}" >
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                            <TextBlock Text="删除" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        Command="{x:Bind ViewModel.UnlockItemsCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE785;" FontSize="16"/>
+                            <TextBlock Text="解锁" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -75,7 +89,7 @@
             <ProgressBar
                 x:Name="MyProgressBar"
                 IsIndeterminate="True"
-                Visibility="{x:Bind ViewModel.DeleteItemsCommand.IsRunning, Mode=OneWay}" />
+                Visibility="{x:Bind VisibilityOr(ViewModel.DeleteItemsCommand.IsRunning,ViewModel.UnlockItemsCommand.IsRunning), Mode=OneWay}" />
         </Grid>
     </Grid>
 

@@ -36,4 +36,10 @@
 		</AdditionalFiles>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Icons\Logo64.ico">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
