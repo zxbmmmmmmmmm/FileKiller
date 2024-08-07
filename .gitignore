@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/FileKiller.WinUI/NativeLibs/ExplorerExtensions.dll
+/FileKiller.WinUI/NativeLibs/EzUnlock.dll
+/FileKiller.WinUI/NativeLibs/EzUnlock.exp
+/FileKiller.WinUI/NativeLibs/EzUnlock.lib
+/EzUnlock/lib/x64-Release

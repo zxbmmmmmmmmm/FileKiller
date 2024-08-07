@@ -16,8 +16,8 @@
 
   <Identity
     Name="d8de5e9f-7630-43ab-89f1-0db9df7fdd6e"
-    Publisher="CN=zxbmm"
-    Version="1.0.0.0" />
+    Publisher="CN=Betta_Fish"
+    Version="0.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="d8de5e9f-7630-43ab-89f1-0db9df7fdd6e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -41,13 +41,18 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="FileKiller.WinUI"
+        DisplayName="FileKiller"
         Description="FileKiller.WinUI"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="portrait"/>
+          <uap:Rotation Preference="landscapeFlipped"/>
+          <uap:Rotation Preference="portraitFlipped"/>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
         <uap5:Extension

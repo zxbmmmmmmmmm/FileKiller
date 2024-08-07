@@ -11,7 +11,7 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <Grid x:Name="MainGrid" AllowDrop="True">
+    <Grid x:Name="MainGrid" AllowDrop="{x:Bind InvertOr(ViewModel.DeleteItemsCommand.IsRunning, ViewModel.UnlockItemsCommand.IsRunning),Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="Auto" />
@@ -35,40 +35,45 @@
 
         </Grid>
         <Grid
-            x:Name="InfoGrid"
+            
             Grid.Row="1"
-            Height="150"
+            
             Background="{ThemeResource CardBackgroundFillColorDefault}">
-            <StackPanel
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Spacing="12">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="拖动文件/文件夹到此窗口" />
-                <StackPanel
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal"
-                    Spacing="12">
-                    <Button Command="{x:Bind ViewModel.DeleteItemsCommand}" Style="{ThemeResource AccentButtonStyle}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="16" Glyph="&#xE74D;" />
-                            <TextBlock VerticalAlignment="Center" Text="删除" />
-                        </StackPanel>
-                    </Button>
-                    <Button Command="{x:Bind ViewModel.UnlockItemsCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="16" Glyph="&#xE785;" />
-                            <TextBlock VerticalAlignment="Center" Text="解锁" />
-                        </StackPanel>
-                    </Button>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,24">
+                <StackPanel Spacing="12" x:Name="InfoPanel" Margin="0,0,0,12" >
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="拖动文件/文件夹到此窗口" />
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="12">
+                        <Button Command="{x:Bind ViewModel.DeleteItemsCommand}"
+                                Style="{ThemeResource AccentButtonStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE74D;" />
+                                <TextBlock VerticalAlignment="Center" Text="删除" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{x:Bind ViewModel.UnlockItemsCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE785;" />
+                                <TextBlock VerticalAlignment="Center" Text="解锁" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
+
                 <TextBlock
+                    Margin="32,0,32,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    IsTextSelectionEnabled="True"
                     Text="{x:Bind ViewModel.Message, Mode=OneWay}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
                     Visibility="{x:Bind NullToVisibility(ViewModel.Message), Mode=OneWay}" />
             </StackPanel>
         </Grid>
@@ -78,7 +83,7 @@
             Padding="12"
             IsMultiSelectCheckBoxEnabled="False"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-            SelectionMode="Multiple">
+            SelectionMode="{x:Bind GetListViewSelectionMode(ViewModel.DeleteItemsCommand.IsRunning, ViewModel.UnlockItemsCommand.IsRunning),Mode=OneWay}">
             <ListView.ItemTemplate>
 
                 <DataTemplate x:DataType="vm:ItemViewModel">
@@ -100,12 +105,12 @@
             Margin="12"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Visibility="{x:Bind IntToVisibility(ViewModel.SelectedItems.Count),Mode=OneWay}"
             Command="{x:Bind ViewModel.RemoveSelectedItemsCommand}"
-            Style="{ThemeResource AccentButtonStyle}">
+            Style="{ThemeResource AccentButtonStyle}"
+            Visibility="{x:Bind IntToVisibility(ViewModel.SelectedItems.Count), Mode=OneWay}">
             <TextBlock>
                 <Run Text="移除所选项" />
-                <Run Text="(" /><Run Text="{x:Bind ViewModel.SelectedItems.Count,Mode=OneWay}" /><Run Text=")" />
+                <Run Text="(" /><Run Text="{x:Bind ViewModel.SelectedItems.Count, Mode=OneWay}" /><Run Text=")" />
             </TextBlock>
         </Button>
         <Grid Name="ProgressGrid" Grid.Row="3">

@@ -57,6 +57,7 @@ public class FileOperationService
     {
         return await Task.Run<bool>(() =>
         {
+            CurrentItemChanged?.Invoke(this, new ProgressingItemChangedEventArgs(path));
             //FileHelper.ItemChanged.Invoke();
             var result = EzUnlockFileW(path);
             Debug.WriteLine(path + ":" + result);
