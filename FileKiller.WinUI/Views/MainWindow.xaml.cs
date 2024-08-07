@@ -33,16 +33,15 @@ namespace FileKiller.WinUI.Views
     public sealed partial class MainWindow : Window
     {
         public MainWindowViewModel ViewModel { get; } = new();
-        public static MainWindow Current { get; private set; }
+        public static MainWindow? Instance { get; private set; }
         public MainWindow()
         {
-            Current = this;
+            Instance = this;
             this.InitializeComponent();
             MainGrid.Drop += OnDrop;
             MainGrid.DragOver += OnDragOver;
             MainGrid.Loaded += OnLoaded;
             this.SetWindowSize(800, 400);
-            this.SetIsAlwaysOnTop(true);
             this.ExtendsContentIntoTitleBar = true;
             ItemsListView.SelectionChanged += OnSelectionChanged;
         }
@@ -50,6 +49,11 @@ namespace FileKiller.WinUI.Views
         private Visibility VisibilityOr(bool a, bool b)
         {
             return a || b?Visibility.Visible:Visibility.Collapsed;
+        }
+
+        private bool InvertOr(bool a, bool b)
+        {
+            return !(a || b);
         }
         private Visibility NullToVisibility(object? obj)
         {
@@ -59,12 +63,18 @@ namespace FileKiller.WinUI.Views
         {
             return num is 0 ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        private ListViewSelectionMode GetListViewSelectionMode(bool a,bool b)
+        {
+            return a || b ? ListViewSelectionMode.None : ListViewSelectionMode.Multiple;
+        }
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (ViewModel.Command is not null)
             {
-                InfoGrid.Visibility = Visibility.Collapsed;
+                InfoPanel.Visibility = Visibility.Collapsed;
                 await Task.Delay(300);
+
                 if(ViewModel.Command is "delete")
                 {
                     await ViewModel.DeleteItemsCommand.ExecuteAsync(null);

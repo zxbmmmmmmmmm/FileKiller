@@ -31,9 +31,9 @@ public partial class MainWindowViewModel:ObservableObject
         _fileService.CurrentItemChanged += CurrentItemChanged;
     }
 
-    private async void CurrentItemChanged(object? sender, ProgressingItemChangedEventArgs e)
+    private void CurrentItemChanged(object? sender, ProgressingItemChangedEventArgs e)
     {
-        MainWindow.Current.DispatcherQueue.TryEnqueue(() => {
+        MainWindow.Instance.DispatcherQueue.TryEnqueue(() => {
             Message = "正在处理 " + e.ItemName;
         });
     }
@@ -55,10 +55,17 @@ public partial class MainWindowViewModel:ObservableObject
     }
 
     [RelayCommand]
+    
     public async Task DeleteItemsAsync()
     {
         try
         {
+            if(Items.Count == 0)
+            {
+                Message = "无内容，请将文件/文件夹拖动至此窗口";
+                return;
+            }
+            if (UnlockItemsCommand.IsRunning) return;
             var count = Items.Count;
             var num = 0;
             while (count > 0)
@@ -99,6 +106,12 @@ public partial class MainWindowViewModel:ObservableObject
     {
         try
         {
+            if (Items.Count == 0)
+            {
+                Message = "无内容，请将文件/文件夹拖动至此窗口";
+                return;
+            }
+            if (DeleteItemsCommand.IsRunning) return;
             var count = Items.Count;
             var num = 0;
             while (count > 0)
